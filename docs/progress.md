@@ -59,9 +59,10 @@ To ensure wrappings and ranges, we use these functions to assign properties valu
   - **set_hsv** and **hsv** migrated to new system
   - New **rgb** function to get RGB code from current based on HSL
   - _Getters_ **r**, **g** and **b** to call _rgb_ function as color properties (for bc compatibility)
+  - Also RGB _setters_. This is not used neither into Snap code nor into libraries, but it was in the JS core... and it can be used for JS coders (and maybe useful for new libs).
 
 ### Other Bug fixes
-  - In _morphic.js_, _Morph.prototype.getPixelColor_ must scale _opacity_ input. Here _getImageData_ fucntion returns _opacity_ in a 0-255 scale, and _RGB_ (old method) is waiting a 0-1 scale.
+  - In _morphic.js_, _Morph.prototype.getPixelColor_ must scale _opacity_ input. Here _getImageData_ function returns _opacity_ in a 0-255 scale, and _RGB_ (old method) is waiting a 0-1 scale.
 
 ### PENDING
   - Recheck all code and color transform algorithms.
