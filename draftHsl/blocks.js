@@ -11075,7 +11075,7 @@ ColorSlotMorph.prototype.getUserColor = function () {
         mouseUpBak = hand.processMouseUp,
         pal = new ColorPaletteMorph(null, new Point(
             this.fontSize * 16,
-            this.fontSize * 10
+            this.fontSize * 14 //old value -> 10
         ));
     world.add(pal);
     pal.setPosition(this.bottomLeft().add(new Point(0, this.edge)));

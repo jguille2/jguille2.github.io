@@ -1913,17 +1913,17 @@ function Color(m, p1, p2, p3, p4) {
         var ll = (cmax + cmin) / 2;
         this.setShade(ll * 200);
         if (delta == 0) {
-            this.hue = 0;
-            this.saturation = 0;
+            this.setHue(0);
+            this.setSaturation(0);
         } else if (cmax == r) {
-            this.hue = 60 / 3.6 * (((g - b) / delta) % 6);
-            this.saturation = delta * 100 / (1 - Math.abs((2 * ll) - 1));
+            this.setHue(60 / 3.6 * (((g - b) / delta) % 6));
+            this.setSaturation(delta * 100 / (1 - Math.abs((2 * ll) - 1)));
         } else if (cmax == g) {
-            this.hue = 60 / 3.6 * (((b - r) / delta) + 2);
-            this.saturation = delta * 100 / (1 - Math.abs((2 * ll) - 1));
+            this.setHue(60 / 3.6 * (((b - r) / delta) + 2));
+            this.setSaturation(delta * 100 / (1 - Math.abs((2 * ll) - 1)));
         } else if (cmax == b) {
-            this.hue = 60 / 3.6 * (((r - g) / delta) + 4);
-            this.saturation = delta * 100 / (1 - Math.abs((2 * ll) - 1));
+            this.setHue(60 / 3.6 * (((r - g) / delta) + 4));
+            this.setSaturation(delta * 100 / (1 - Math.abs((2 * ll) - 1)));
         }
     }
 }
@@ -1933,23 +1933,23 @@ function Color(m, p1, p2, p3, p4) {
 Color.prototype.setHue = function(val) {
     // It maps original 0-360 degrees polar coordinates to 0-100 and wrapping like a roller.
     // Default value is 0
-    this.hue = (typeof(val) == 'number') ? ((val > 0 || (val % 100) == 0) ? val % 100 : 100 + (val % 100)) : 0;
+    this.hue = (typeof(val) == 'number') ? ((val > 0 || (val % 100) == 0) ? Math.round((val % 100) * 100) / 100 : Math.round((100 + (val % 100)) * 100) / 100) : 0;
 };
 
 Color.prototype.setSaturation = function(val) {
     // % value, like HSLA saturation. No wrapping.
-    this.saturation = (typeof(val) == 'number') ? (Math.min(100, Math.max(0, val))) : 100;
+    this.saturation = (typeof(val) == 'number') ? (Math.min(100, Math.max(0, Math.round(val * 100) / 100))) : 100;
 };
 
 Color.prototype.setShade = function(val) {
     // It maps original % (0-100)lightness value to 0-200 and wrapping 200-400 to show continuity. Beyond, wrapping like a roller.
     // Default value is 100
-    this.shade = (typeof(val) == 'number') ? ((val > 0 || (val % 400) == 0) ? val % 400 : 400 + (val % 400)) : 100;
+    this.shade = (typeof(val) == 'number') ? ((val > 0 || (val % 400) == 0) ? Math.round((val % 400) * 100) / 100 : Math.round((400 + (val % 400)) * 100) / 100) : 100;
 };
 
 Color.prototype.setOpacity = function(val) {
     // % value, like HSLA alpha. No wrapping.
-    this.opacity = (typeof(val) == 'number') ? (Math.min(100, Math.max(0, val))) : 100;
+    this.opacity = (typeof(val) == 'number') ? (Math.min(100, Math.max(0, Math.round(val * 100) / 100))) : 100;
 };
 
 // Get Lightness
@@ -1961,10 +1961,10 @@ Color.prototype.reportLightness = function() {
 
 Color.prototype.toString = function () {
     return 'hsla(' +
-        Math.round(this.hue * 3.6) + ',' +
-        Math.round(this.saturation) + '%,' +
-        Math.round(this.reportLightness()) + '%,' +
-        (this.opacity / 100) + ')';
+        this.hue * 3.6 + ',' +
+        this.saturation + '%,' +
+        this.reportLightness() + '%,' +
+        this.opacity / 100 + ')';
 };
 
 // Color copying:
@@ -2048,14 +2048,42 @@ Color.prototype.rgb = function () {
         g = m;
         b = x + m;
     }
-    return [r * 255, g * 255, b * 255];
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
 };
 
-Object.defineProperty(Color.prototype, 'r', {get : function () { return this.rgb()[0];}});
+Color.prototype.setRGB = function (col, val) {
+    var color;
+    if (col == 'r') {
+        color = new Color(val, this.rgb()[1], this.rgb()[2]);
+    } else if (col == 'g') {
+        color = new Color(this.rgb()[0], val, this.rgb()[2]);
+    } else if (col == 'b') {
+        color = new Color(this.rgb()[0], this.rgb()[1], val);
+    } else {
+        color = this.copy();
+    }
+    this.setHue(color.hue);
+    this.setSaturation(color.saturation);
+    this.setShade(color.shade);
+};
 
-Object.defineProperty(Color.prototype, 'g', {get : function () { return this.rgb()[1];}});
+Object.defineProperty(Color.prototype, 'r', {
+    get: function () { return this.rgb()[0]; },
+    set: function (val) { this.setRGB('r', val); }
+    }
+);
 
-Object.defineProperty(Color.prototype, 'b', {get : function () { return this.rgb()[2];}});
+Object.defineProperty(Color.prototype, 'g', {
+    get: function () { return this.rgb()[1]; },
+    set: function (val) { this.setRGB('g', val); }
+    }
+);
+
+Object.defineProperty(Color.prototype, 'b', {
+    get: function () { return this.rgb()[2]; },
+    set: function (val) { this.setRGB('b', val); }
+    }
+);
 
 ////////////////////////////////////////////////////////// /</Pending> - Check hsv functions and implement rgb getters
 // Color mixing:
@@ -5024,19 +5052,48 @@ ColorPaletteMorph.prototype.init = function (target, size) {
 };
 
 ColorPaletteMorph.prototype.drawNew = function () {
-    var context, ext, x, y, h, l;
+    var context, ext, x, y, h, l, colors;
 
     ext = this.extent();
     this.image = newCanvas(this.extent());
     context = this.image.getContext('2d');
     this.choice = new Color();
-    for (x = 0; x <= ext.x; x += 1) {
+    colors = ['hsl(0, 0%, 100%)', //white
+		'hsl(0, 0%, 75%)',        //silver
+		'hsl(0, 0%, 50%)',        //gray
+		'hsl(0, 0%, 41%)',        //dimgray
+		'hsl(0, 0%, 0%)',         //black
+		'hsl(0, 100%, 25%)',      //maroon
+		'hsl(25, 76%, 31%)',      //saddlebrown
+		'hsl(25, 75%, 47%)',      //chocolate
+		'hsl(0, 100%, 50%)',      //red
+		'hsl(30, 100%, 50%)',     //orange
+		'hsl(60, 100%, 50%)',     //yellow
+		'hsl(120, 100%, 50%)',    //green
+		'hsl(200, 100%, 50%)',    //blue
+		'hsl(240, 100%, 50%)',    //indigo
+		'hsl(270, 100%, 50%)',    //violet
+		'hsl(300, 100%, 50%)'     //magenta
+	];
+    // HSL palette (with saturation = 100%)
+    for (x = 0; x <= ext.x; x++) {
         h = 360 * x / ext.x;
-        for (y = 0; y <= ext.y; y += 1) {
-            l = 100 - (y / ext.y * 100);
+        for (y = 0; y <= ext.y - 30; y++) {
+            l = 100 - (y / (ext.y - 30) * 100);
             context.fillStyle = 'hsl(' + h + ',100%,' + l + '%)';
             context.fillRect(x, y, 1, 1);
         }
+    }
+    // Gray scale
+    for (x = 0; x <= ext.x; x++) {
+        l = 100 - (x/ ext.x * 100);
+        context.fillStyle = 'hsl(0, 0%, ' + l + '%)';
+        context.fillRect(x, ext.y - 30, 1, 15);
+    }
+    // 16 colors palette
+    for (x = 0; x < 16; x++) {
+	    context.fillStyle = colors[x];
+        context.fillRect(x * ext.x / 16, ext.y - 15, ext.x / 16, 15);
     }
 };
 
