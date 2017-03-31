@@ -40,8 +40,8 @@ Constructor has three modes with a generic
 To ensure wrappings and ranges, we use these functions to assign properties values
 
   - **setHue**, **setSaturation**, **setShade** and **setOpacity**
-
   - **this.param** reports directly these 'natural' params... but often, we need to transform _shade_ (and its wrapping) into _lightness_ -> **reportLightness**
+  - Fixed **precision pararams** to **0.01**: _hue_ [0.00, 99.99], _saturation_ [0.00, 100.00], _shade_ [0.00, 399.99] and _opacity_ [0.00,100.00]. With this precision, RGB calculations are coherents (reversible without changes) as integers [0, 255]
 
 ### Color functions
   - **copy** and **eq** (comparison) are the same, now in hsl
@@ -64,10 +64,11 @@ To ensure wrappings and ranges, we use these functions to assign properties valu
 ### Other Bug fixes
   - In _morphic.js_, _Morph.prototype.getPixelColor_ must scale _opacity_ input. Here _getImageData_ function returns _opacity_ in a 0-255 scale, and _RGB_ (old method) is waiting a 0-1 scale.
 
+### Color Palette
+  - Testing... Added a gray scale and a palette of 16 colors (black and white, 3 grays, 3 browns, 7 from rainbow and magenta)
+  
 ### PENDING
-  - Recheck all code and color transform algorithms.
-  - Considere decimals (precission) in color codification
-  - Redesign of **set pen color to %ctl** block.
-    - New palette with current HSL colors + grayScale + defined colors picker (no gradient, list of defined colors)
-    - Enable two options to assign color: color picker or drop-down list (and then, the possibility to entry numbers, vars...)
-
+  - Continue testing... Add docs for all algorithms.
+  - New reporter "pen color param↓"?
+  - Add "hsl" blocks to color lib.
+  - Thinking in **set pen color to** block(s). Waiting for first-class colors... but also in a possibility of a numeric palette.
