@@ -51,8 +51,8 @@ To ensure wrappings and ranges, we use these functions to assign properties valu
   - **dansDarker** is kept for backward comp (but not used in Snap code)
 
 ### New pen color blocks
-  - Two new blocks: _set_/_change_ pen color params: _hue_, _shade_, _saturation_ and _opacity_ (deliberately different order than HSLA, more appropriated for snappers/scratchers).
-  - And one new reporter "pen color param↓" for these 4 color params.
+  - **Two new action blocks**: _set_/_change_ pen color params: _hue_, _shade_, _saturation_ and _opacity_ (deliberately different order than HSLA, more appropriated for snappers/scratchers).
+  - And **one new reporter** "pen color param↓" for these 4 color params.
   - Four old blocks deleted. Added to _blockMigrations_ for backward compatibility
   - Old functions kept for compatibility for JS coders
 
@@ -67,6 +67,7 @@ To ensure wrappings and ranges, we use these functions to assign properties valu
 
 ### Color Palette
   - Testing... Added a gray scale and a palette of 16 colors (black and white, 3 grays, 3 browns, 7 from rainbow and magenta)
+  - Second proposal with Brian 20 colors.
   
 ### PENDING
   - Continue testing... Add docs for all algorithms.
