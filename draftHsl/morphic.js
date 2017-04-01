@@ -5058,6 +5058,7 @@ ColorPaletteMorph.prototype.drawNew = function () {
     this.image = newCanvas(this.extent());
     context = this.image.getContext('2d');
     this.choice = new Color();
+/*16 colors palette
     colors = ['hsl(0, 0%, 100%)', //white
 		'hsl(0, 0%, 75%)',        //silver
 		'hsl(0, 0%, 50%)',        //gray
@@ -5075,6 +5076,28 @@ ColorPaletteMorph.prototype.drawNew = function () {
 		'hsl(270, 100%, 50%)',    //violet
 		'hsl(300, 100%, 50%)'     //magenta
 	];
+*/
+    colors = ['rgb(0, 0,0)',
+        'rgb(128, 128, 128)',
+        'rgb(192, 192, 192)',
+        'rgb(255, 255, 255)',
+        'rgb(255, 0, 0)',
+        'rgb(255, 20, 147)',
+        'rgb(139, 69, 19)',
+        'rgb(128, 0, 0)',
+        'rgb(255, 140, 0)',
+        'rgb(210, 105, 30)', 
+        'rgb(255, 255, 0)',
+        'rgb(245, 222, 131)',
+        'rgb(0, 255, 0)',
+        'rgb(0, 128, 0)',
+        'rgb(0, 255, 255)',
+        'rgb(0, 128, 128)',
+        'rgb(0, 0, 255)',
+        'rgb(0, 0, 128)',
+        'rgb(128, 0, 255)',
+        'rgb(255, 0, 255)'
+    ];
     // HSL palette (with saturation = 100%)
     for (x = 0; x <= ext.x; x++) {
         h = 360 * x / ext.x;
@@ -5088,12 +5111,16 @@ ColorPaletteMorph.prototype.drawNew = function () {
     for (x = 0; x <= ext.x; x++) {
         l = 100 - (x/ ext.x * 100);
         context.fillStyle = 'hsl(0, 0%, ' + l + '%)';
-        context.fillRect(x, ext.y - 30, 1, 15);
+        context.fillRect(x, ext.y - 30, 1, 10);
     }
-    // 16 colors palette
-    for (x = 0; x < 16; x++) {
+    // 20 colors palette
+    for (x = 0; x < 20; x++) {
 	    context.fillStyle = colors[x];
-        context.fillRect(x * ext.x / 16, ext.y - 15, ext.x / 16, 15);
+        if (x % 2 == 0) {
+            context.fillRect((x / 2) * ext.x / 10, ext.y - 20, ext.x / 10, 10);
+        } else {
+            context.fillRect((Math.round(x / 2) - 1) * ext.x / 10, ext.y - 10, ext.x / 10, 10);
+        }
     }
 };
 

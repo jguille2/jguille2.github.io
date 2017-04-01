@@ -51,7 +51,8 @@ To ensure wrappings and ranges, we use these functions to assign properties valu
   - **dansDarker** is kept for backward comp (but not used in Snap code)
 
 ### New pen color blocks
-  - Two new blocks: _set_/_change_ pen color params (_hue_, _saturation_, _shade_ and _opacity_)
+  - Two new blocks: _set_/_change_ pen color params: _hue_, _shade_, _saturation_ and _opacity_ (deliberately different order than HSLA, more appropriated for snappers/scratchers).
+  - And one new reporter "pen color param↓" for these 4 color params.
   - Four old blocks deleted. Added to _blockMigrations_ for backward compatibility
   - Old functions kept for compatibility for JS coders
 
@@ -69,6 +70,12 @@ To ensure wrappings and ranges, we use these functions to assign properties valu
   
 ### PENDING
   - Continue testing... Add docs for all algorithms.
-  - New reporter "pen color param↓"?
   - Add "hsl" blocks to color lib.
-  - Thinking in **set pen color to** block(s). Waiting for first-class colors... but also in a possibility of a numeric palette.
+  - Change default color in ColorSlotMorph (current is Color(145, 26, 68)), or add it to the palette.
+  - ColorPalette. Work in progress...
+    - Current: hsl + grayscale + 20 Brian colors (in two rows)
+    - I want the 'default gray' (80,80,80) into the palette (or change it)
+    - Check all colors (compare palettes)
+    - Numerical progression?
+  - Possibility of a  **set pen color to %n** block (not the old one) related to the palette order.
+  - Color Palette into the Paint Editor (possibility to add 'color pen'? - noted for vector editor)

@@ -1439,8 +1439,8 @@ SyntaxElementMorph.prototype.labelPart = function (spec) {
                 false,  // numeric?
                 {
                     'hue' : ['hue'],
-                    'saturation' : ['saturation'],
                     'shade' : ['shade'],
+                    'saturation' : ['saturation'],
                     'opacity' : ['opacity']
                 },
                 true // read-only

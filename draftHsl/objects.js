@@ -497,6 +497,13 @@ SpriteMorph.prototype.initBlocks = function () {
             spec: 'change pen color %colorParams by %n',
             defaults: [localize('hue'), 10]
         },
+        reportColorParam: {
+            only: SpriteMorph,
+            type: 'reporter',
+            category: 'pen',
+            spec: 'pen color %colorParams',
+            defaults: [localize('hue')]
+        },
         changeSize: {
             only: SpriteMorph,
             type: 'command',
@@ -1887,6 +1894,7 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         blocks.push('-');
         blocks.push(block('setColorParam'));
         blocks.push(block('changeColorParam'));
+        blocks.push(block('reportColorParam'));
         blocks.push('-');
         blocks.push(block('changeSize'));
         blocks.push(block('setSize'));
@@ -3259,8 +3267,12 @@ SpriteMorph.prototype.changeColorParam = function (param, num) {
         this.drawNew();
         this.changed();
     }
-
 };
+
+SpriteMorph.prototype.reportColorParam = function(param) {
+    var param = param instanceof Array ? param[0] : null;
+    return this.color[param];
+}
 
 // SpriteMorph layers
 
