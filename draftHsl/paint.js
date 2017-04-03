@@ -501,39 +501,72 @@ PaintColorPickerMorph.prototype.drawNew = function () {
         can = newCanvas(this.extent()),
         ctx = can.getContext("2d"),
         colorselection,
-        r;
+        r,
+        colors = ['rgb(0, 0,0)',	//black
+            'rgb(128, 128, 128)',	//gray
+            'rgb(192, 192, 192)',	//silver
+            'rgb(255, 255, 255)',	//white
+            'rgb(139, 69, 19)',		//saddlebrown
+            'rgb(128, 0, 0)',		//maroon
+            'rgb(255, 0, 0)',		//red
+            'rgb(255, 192, 203)',	//pink
+            'rgb(255, 165, 0)',		//orange
+            'rgb(210, 105, 30)', 	//chocolate
+            'rgb(255, 255, 0)',		//yellow
+            'rgb(128, 128, 0)',		//olive
+            'rgb(0, 255, 0)',		//lime
+            'rgb(0, 128, 0)',		//green
+            'rgb(0, 255, 255)',		//aqua
+            'rgb(0, 128, 128)',		//teal
+            'rgb(0, 0, 255)',		//blue
+            'rgb(0, 0, 128)',		//navy
+            'rgb(128, 0, 128)',		//purple
+            'rgb(255, 0, 255)'		//magenta
+        ];
+//hsl palette
     for (x = 0; x < this.width(); x += 1) {
-        for (y = 0; y < this.height() - 20; y += 1) {
+        for (y = 0; y < this.height() - 32; y += 1) {
             ctx.fillStyle = "hsl(" +
                 (360 * x / this.width()) +
                 "," +
                 "100%," +
-                (y * 100 / (this.height() - 20)) +
+                (y * 100 / (this.height() - 32)) +
                 "%)";
             ctx.fillRect(x, y, 1, 1);
         }
     }
+//gray scale palette
     for (x = 0; x < this.width(); x += 1) {
         r = Math.floor(255 * x / this.width());
         ctx.fillStyle = "rgb(" + r + ", " + r + ", " + r + ")";
-        ctx.fillRect(x, this.height() - 20, 1, 10);
+        ctx.fillRect(x, this.height() - 32, 1, 8);
     }
+//black-white-transparent options
     colorselection = ["black", "white", "gray"];
     for (x = 0; x < colorselection.length; x += 1) {
         ctx.fillStyle = colorselection[x];
         ctx.fillRect(
             x * this.width() / colorselection.length,
-            this.height() - 10,
+            this.height() - 24,
             this.width() / colorselection.length,
-            10
+            8
         );
     }
     for (x = this.width() * 2 / 3; x < this.width(); x += 2) {
-        for (y = this.height() - 10; y < this.height(); y += 2) {
+        for (y = this.height() - 24; y < this.height() - 16; y += 2) {
             if ((x + y) / 2 % 2 === 0) {
                 ctx.fillStyle = "#DDD";
                 ctx.fillRect(x, y, 2, 2);
             }
+        }
+    }
+//20 color palette
+    for (x = 0; x < 20; x++) {
+	    ctx.fillStyle = colors[x];
+        if (x % 2 == 0) {
+            ctx.fillRect((x / 2) * this.width() / 10, this.height() - 16, this.width() / 10, 8);
+        } else {
+            ctx.fillRect((Math.round(x / 2) - 1) * this.width() / 10, this.height() - 8, this.width() / 10, 8);
         }
     }
     this.image = can;
@@ -541,7 +574,8 @@ PaintColorPickerMorph.prototype.drawNew = function () {
 
 PaintColorPickerMorph.prototype.mouseDownLeft = function (pos) {
     if ((pos.subtract(this.position()).x > this.width() * 2 / 3) &&
-            (pos.subtract(this.position()).y > this.height() - 10)) {
+            (pos.subtract(this.position()).y > this.height() - 24) &&
+            (pos.subtract(this.position()).y < this.height() - 16)) {
         this.action("transparent");
     } else {
         this.action(this.getPixelColor(pos));

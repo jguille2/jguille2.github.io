@@ -1892,8 +1892,8 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         blocks.push('-');
         blocks.push(block('setColor'));
         blocks.push('-');
-        blocks.push(block('setColorParam'));
         blocks.push(block('changeColorParam'));
+        blocks.push(block('setColorParam'));
         blocks.push(block('reportColorParam'));
         blocks.push('-');
         blocks.push(block('changeSize'));
