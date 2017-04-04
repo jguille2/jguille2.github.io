@@ -1,5 +1,5 @@
 # Snap! colors
-Reimplementing color system into hsla, fixing some current problems and trying to make a more consistent behavior.
+Reimplementing color system based in hsla, fixing some current problems and trying to make a more consistent behavior.
 
 ## Morphic.js - Color object
 
@@ -62,21 +62,50 @@ To ensure wrappings and ranges, we use these functions to assign properties valu
   - _Getters_ **r**, **g** and **b** to call _rgb_ function as color properties (for bc compatibility)
   - Also RGB _setters_. This is not used neither into Snap code nor into libraries, but it was in the JS core... and it can be used for JS coders (and maybe useful for new libs).
 
-### Other Bug fixes
-  - In _morphic.js_, _Morph.prototype.getPixelColor_ must scale _opacity_ input. Here _getImageData_ function returns _opacity_ in a 0-255 scale, and _RGB_ (old method) is waiting a 0-1 scale.
-
 ### Color Palette
-  - Testing... Added a gray scale and a palette of 16 colors (black and white, 3 grays, 3 browns, 7 from rainbow and magenta)
-  - Second proposal with Brian 20 colors.
+  - Added a gray scale and a palette of 20 basic colors
+  - Added the same 20 basic colors to the palette into the Paint Editor
+  - This colors are:
+```javascript
+    colors = ['rgb(0, 0,0)',  //black
+        'rgb(128, 128, 128)', //gray
+        'rgb(192, 192, 192)', //silver
+        'rgb(255, 255, 255)', //white
+        'rgb(139, 69, 19)',   //saddlebrown
+        'rgb(128, 0, 0)',     //maroon
+        'rgb(255, 0, 0)',     //red
+        'rgb(255, 192, 203)', //pink
+        'rgb(255, 165, 0)',   //orange
+        'rgb(210, 105, 30)',  //chocolate
+        'rgb(255, 255, 0)',   //yellow
+        'rgb(128, 128, 0)',   //olive
+        'rgb(0, 255, 0)',     //lime
+        'rgb(0, 128, 0)',     //green
+        'rgb(0, 255, 255)',   //aqua
+        'rgb(0, 128, 128)',   //teal
+        'rgb(0, 0, 255)',     //blue
+        'rgb(0, 0, 128)',     //navy
+        'rgb(128, 0, 128)',   //purple
+        'rgb(255, 0, 255)'    //magenta
+    ];
+```
+    
+### RGB, HSV libraty
+  - Added two blocks for HSLA codification (setter and getter)
+  - Renamed library: "RGB, HSV and HSLA pen colors"
   
-### PENDING
-  - Continue testing... Add docs for all algorithms.
-  - Add "hsl" blocks to color lib.
-  - Change default color in ColorSlotMorph (current is Color(145, 26, 68)), or add it to the palette.
-  - ColorPalette. Work in progress...
-    - Current: hsl + grayscale + 20 Brian colors (in two rows)
-    - I want the 'default gray' (80,80,80) into the palette (or change it)
-    - Check all colors (compare palettes)
-    - Numerical progression?
-  - Possibility of a  **set pen color to %n** block (not the old one) related to the palette order.
-  - Color Palette into the Paint Editor (possibility to add 'color pen'? - noted for vector editor)
+### Other minor changes: bug fixes, details...
+  - Bug in _morphic.js_, _Morph.prototype.getPixelColor_ must scale _opacity_ input. Here _getImageData_ function returns _opacity_ in a 0-255 scale, and _RGB_ (old method) is waiting a 0-1 scale.
+  - Changed default ColorSlotMorph color (from Color(145, 26, 68) to _red_)
+  
+### Notes for continue...
+  - Block "switch to pen color %n" to set a color from the palette with its number (order) and name (by the drop-down)
+  - A new "Color" Tab.
+    - A "Current Color" object (no erasable) to store current (any) color. It's number (order) is 0
+    - A set of colors: objects with name, order and a defined value (their color)
+    - We can delete, redefine (change the color), rename and reorder (move) these.
+    - We have a default palette (a set of colors) in every sprite
+    - We can import/export palettes: trafic-lights, rainbow, 16 basic colors, grays...
+    - Tree basic colors to manage this: "switch pen color to", "next pen color" and "pen color #" reporter
+  - SVG support - Vector Editor. Possibility to paint with "pen color" (dinamically changed)
+  - Check default (80, 80, 80) color for the initial Sprite
