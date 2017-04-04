@@ -1893,9 +1893,13 @@ function Color(m, p1, p2, p3, p4) {
     // HSLA - Color("l", h, s, l, a)
     // Default values are h = 0, s = 100, l = 50 and a = 1
         this.setHue((p1 || 0) / 3.6);
-        this.setSaturation(p2);
-        this.setShade((p3 || 50) * 2);
-        this.setOpacity((p4 || ((p4 == 0)? 0 : 1)) * 100);
+        this.setSaturation(p2 || ((p2 == 0) ? 0 : 100));
+        if (p3) {
+            this.setShade(Math.min(Math.max(0, p3 * 2), 200));
+        } else {
+            this.setShade((p3 == 0) ? 0 : 100);
+        }
+        this.setOpacity((p4 || ((p4 == 0) ? 0 : 1)) * 100);
     } else {
     // RGBA - Color (r, g, b, a)
     // Default values are r = g = b = 0 and a = 1
@@ -1986,10 +1990,10 @@ Color.prototype.eq = function (aColor) {
     return aColor &&
         this.hue === aColor.hue &&
         this.saturation === aColor.saturation &&
-        this.shade === aColor.shade;
+        this.shade === aColor.shade &&
+        this.opacity === aColor.opacity;
 };
-/////////////////////////////////////////////////////// <Pending> - Check hsv functions and implement rgb getters
-// Color conversion (hsv):
+// Color conversion (hsv, rgb):
 
 Color.prototype.hsv = function () {
     // For backward compatibility with old library and JS coders
@@ -2085,7 +2089,6 @@ Object.defineProperty(Color.prototype, 'b', {
     }
 );
 
-////////////////////////////////////////////////////////// /</Pending> - Check hsv functions and implement rgb getters
 // Color mixing:
 
 Color.prototype.mixed = function (proportion, otherColor) {
@@ -5058,49 +5061,26 @@ ColorPaletteMorph.prototype.drawNew = function () {
     this.image = newCanvas(this.extent());
     context = this.image.getContext('2d');
     this.choice = new Color();
-/* Brians 20
-    colors = ['rgb(0, 0,0)',
-        'rgb(128, 128, 128)',
-        'rgb(192, 192, 192)',
-        'rgb(255, 255, 255)',
-        'rgb(255, 0, 0)',
-        'rgb(255, 20, 147)',
-        'rgb(139, 69, 19)',
-        'rgb(128, 0, 0)',
-        'rgb(255, 140, 0)',
-        'rgb(210, 105, 30)', 
-        'rgb(255, 255, 0)',
-        'rgb(245, 222, 131)',
-        'rgb(0, 255, 0)',
-        'rgb(0, 128, 0)',
-        'rgb(0, 255, 255)',
-        'rgb(0, 128, 128)',
-        'rgb(0, 0, 255)',
-        'rgb(0, 0, 128)',
-        'rgb(128, 0, 255)',
-        'rgb(255, 0, 255)'
-    ];
-*/
-    colors = ['rgb(0, 0,0)',	//black
-        'rgb(128, 128, 128)',	//gray
-        'rgb(192, 192, 192)',	//silver
-        'rgb(255, 255, 255)',	//white
-        'rgb(139, 69, 19)',		//saddlebrown
-        'rgb(128, 0, 0)',		//maroon
-        'rgb(255, 0, 0)',		//red
-        'rgb(255, 192, 203)',	//pink
-        'rgb(255, 165, 0)',		//orange
-        'rgb(210, 105, 30)', 	//chocolate
-        'rgb(255, 255, 0)',		//yellow
-        'rgb(128, 128, 0)',		//olive
-        'rgb(0, 255, 0)',		//lime
-        'rgb(0, 128, 0)',		//green
-        'rgb(0, 255, 255)',		//aqua
-        'rgb(0, 128, 128)',		//teal
-        'rgb(0, 0, 255)',		//blue
-        'rgb(0, 0, 128)',		//navy
-        'rgb(128, 0, 128)',		//purple
-        'rgb(255, 0, 255)'		//magenta
+    colors = ['rgb(0, 0,0)',    //black
+        'rgb(128, 128, 128)',   //gray
+        'rgb(192, 192, 192)',   //silver
+        'rgb(255, 255, 255)',   //white
+        'rgb(139, 69, 19)',     //saddlebrown
+        'rgb(128, 0, 0)',       //maroon
+        'rgb(255, 0, 0)',       //red
+        'rgb(255, 192, 203)',   //pink
+        'rgb(255, 165, 0)',     //orange
+        'rgb(210, 105, 30)',    //chocolate
+        'rgb(255, 255, 0)',     //yellow
+        'rgb(128, 128, 0)',     //olive
+        'rgb(0, 255, 0)',       //lime
+        'rgb(0, 128, 0)',       //green
+        'rgb(0, 255, 255)',     //aqua
+        'rgb(0, 128, 128)',     //teal
+        'rgb(0, 0, 255)',       //blue
+        'rgb(0, 0, 128)',       //navy
+        'rgb(128, 0, 128)',     //purple
+        'rgb(255, 0, 255)'      //magenta
     ];
     // HSL palette (with saturation = 100%)
     for (x = 0; x <= ext.x; x++) {
@@ -5119,7 +5099,7 @@ ColorPaletteMorph.prototype.drawNew = function () {
     }
     // 20 colors palette (two rows)
     for (x = 0; x < 20; x++) {
-	    context.fillStyle = colors[x];
+        context.fillStyle = colors[x];
         if (x % 2 == 0) {
             context.fillRect((x / 2) * ext.x / 10, ext.y - 20, ext.x / 10, 10);
         } else {

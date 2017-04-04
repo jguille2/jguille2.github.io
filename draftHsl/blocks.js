@@ -11056,7 +11056,7 @@ function ColorSlotMorph(clr) {
 
 ColorSlotMorph.prototype.init = function (clr) {
     ColorSlotMorph.uber.init.call(this, null, true); // silently
-    this.setColor(clr || new Color(145, 26, 68));
+    this.setColor(clr || new Color(255, 0, 0));
 };
 
 ColorSlotMorph.prototype.getSpec = function () {
