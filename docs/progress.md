@@ -63,9 +63,9 @@ To ensure wrappings and ranges, we use these functions to assign properties valu
   - Also RGB _setters_. This is not used neither into Snap code nor into libraries, but it was in the JS core... and it can be used for JS coders (and maybe useful for new libs).
 
 ### Color Palette
-  - Added a gray scale and a palette of 20 basic colors
-  - Added the same 20 basic colors to the palette into the Paint Editor
-  - This colors are:
+  - Added a gray scale and a palette of 20 basic colors to the _picker input_ slot
+  - Added the same 20 basic colors to the palette into the _Paint Editor_
+  - These colors are:
 ```javascript
     colors = ['rgb(0, 0,0)',  //black
         'rgb(128, 128, 128)', //gray
@@ -90,7 +90,7 @@ To ensure wrappings and ranges, we use these functions to assign properties valu
     ];
 ```
     
-### RGB, HSV libraty
+### RGB, HSV library
   - Added two blocks for HSLA codification (setter and getter)
   - Renamed library: "RGB, HSV and HSLA pen colors"
   
@@ -98,7 +98,7 @@ To ensure wrappings and ranges, we use these functions to assign properties valu
   - Bug in _morphic.js_, _Morph.prototype.getPixelColor_ must scale _opacity_ input. Here _getImageData_ function returns _opacity_ in a 0-255 scale, and _RGB_ (old method) is waiting a 0-1 scale.
   - Changed default ColorSlotMorph color (from Color(145, 26, 68) to _red_)
   
-### Notes for continue...
+### Not implemented - Notes for continue...
   - Block "switch to pen color %n" to set a color from the palette with its number (order) and name (by the drop-down)
   - A new "Color" Tab.
     - A "Current Color" object (no erasable) to store current (any) color. It's number (order) is 0
