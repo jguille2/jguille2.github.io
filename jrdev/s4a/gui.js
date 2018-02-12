@@ -476,6 +476,7 @@ IDE_Morph.prototype.startSnapJr = function () {
         'Examples/SnapJunior.xml',
         function (contents) {
             myself.droppedText(contents, 'Snap Jr.');
+            location.hash = '#loadJr';
         }
     );
 };
