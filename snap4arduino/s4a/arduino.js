@@ -33,15 +33,15 @@ Arduino.prototype.keepAlive = function () {
     }
 };
 
-Arduino.prototype.disconnect = function (silent) {
+Arduino.prototype.disconnect = function (silent, force) {
     // Prevent disconnection attempts before board is actually connected
-    if (this.board && this.isBoardReady()) {
+    if ((this.board && this.isBoardReady()) || force) {
         this.disconnecting = true;
         if (this.port === 'network') {
             this.board.sp.destroy();
         } else {
             if (this.board.sp && !this.board.sp.disconnected) {
-                if (!this.connecting) {
+                if (!this.connecting || force) {
                     // otherwise something went wrong in the middle of a connection attempt
                     this.board.sp.close();
                 } 
@@ -187,7 +187,7 @@ Arduino.prototype.networkDialog = function () {
     var myself = this;
     new DialogBoxMorph(
             this, // target
-            function () { myself.connect(myself.hostname, false, 'network'); }, // action
+            function (hostName) { myself.connect(hostName, false, 'network'); }, // action
             this // environment
             ).prompt(
                 'Enter hostname or ip address:', // title
@@ -331,6 +331,7 @@ Arduino.prototype.connect = function (port, verify, channel) {
 
                 myself.hideMessage();
                 myself.board.getArduinoBoardParam = nop;
+                myself.board.checkArduinoBoardParam = nop;
 
                 ide.inform(myself.owner.name, localize('An Arduino board has been connected. Happy prototyping!'));   
             } else {
@@ -352,8 +353,8 @@ Arduino.prototype.connect = function (port, verify, channel) {
                         + port + '\n\n' + localize('Check if firmata is loaded.')
                         );
 
-                // silently closing the connection attempt
-                myself.disconnect(true); 
+                // silent and forced closing of the connection attempt
+                myself.disconnect(true, true);
             }
         }, 10000);
     };
@@ -498,7 +499,7 @@ Arduino.transpile = function (body, hatBlocks) {
     + 'byte detachedServoCount = 0;\n'
     + 'byte servoCount = 0;\n\n';
 
-    varLines = body.match(/int .* = 0;/g) || [];
+    varLines = body.match(/int .* = 0;\n/g) || [];
     body = body.replace(/int .* = 0;\n/g, '');
     varLines.forEach(function (each) {
         assignments += each + '\n';

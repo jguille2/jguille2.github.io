@@ -90,6 +90,9 @@ s4aTempDict = {
     'Disconnect Arduino':
         'Desconnecta Arduino',
 
+    'arduino connected?':
+        'arduino connectat?',
+
     'analog reading %analogPin':
         'lectura analògica %analogPin',
 
@@ -108,8 +111,8 @@ s4aTempDict = {
     'set digital pin %digitalPin to %b':
         'posa el pin digital %digitalPin a %b',
 
-    'set servo %servoPin to %servoValue':
-        'posa el servo %servoPin a %servoValue',
+    'set servo %digitalPin to %servoValue':
+        'posa el servo %digitalPin a %servoValue',
 
     'set pin %pwmPin to value %n':
         'posa el pin %pwmPin al valor %n',
@@ -166,7 +169,69 @@ s4aTempDict = {
         'Aquesta operació pot trigar uns segons...',
 
     'Network serial ports':
-        'Ports sèrie sobre xarxa'
+        'Ports sèrie sobre xarxa',
+
+    'Open from URL...':
+        'Obre des d\'una URL...',
+
+    'Save, share and get URL...':
+        'Desa, comparteix i mostra la URL...',
+
+    'This project is now public at the following URL:':
+        'Aquest projecte és públic, accessible des de la URL:',
+
+    'About Snap4Arduino...':
+        'Sobre Snap4Arduino...',
+   
+    'Snap4Arduino website':
+        'Web de Snap4Arduino',
+  
+    'Snap4Arduino repository':
+        'Repositori de Snap4Arduino',
+ 
+    'Start a Snap Jr. session':
+        'Inicia una sessió de Snap Júnior',
+
+    'Start Snap4Arduino in an\nicon-based blocks mode\nfor the youngest programmers':
+        'Inicia Snap4Arduino en un\nmode de blocs amb icones\nper els/les programadors/es més joves',
+
+    'Loading Snap Jr.':
+        'S\'està carregant Snap Júnior',
+
+    'HTTP server':
+        'Servidor HTTP',
+
+    'uncheck to stop\nHTTP server':
+        'desmarqueu per aturar\nel servidor HTTP',
+
+    'check to start\nHTTP server, allowing\nremote control\nof Snap4Arduino':
+        'marqueu per iniciar\nel servidor HTTP, permetent\nel control remot\nde Snap4Arduino',
+
+    'Public stage':
+        'Escenari públic',
+
+    'uncheck to prevent the stage\nfrom being viewed\nfrom the HTTP server':
+        'desmarqueu per evitar que l\'escenari\nes vegi des del servidor HTTP',
+
+    'check to allow the stage\nto be viewed\nfrom the HTTP server':
+        'marqueu per permetre que l\'escenari\nes vegi des del servidor HTTP',
+    'red':
+        'vermell',
+    'blue':
+        'blau',
+    'SnapJunior Blocks':
+        'Blocs de l\'Snap Junior',
+    'SnapJuniorPlus Blocks':
+        'Blocs extra per l\'Snap Junior',
+    'Icon-based blocks for the youngest programmers.':
+        'Blocs amb icones per als programadors i programadores més joves.',
+    'Extra blocks for SnapJunior.':
+        'Blocs per afegir funcionalitats a l\'Snap Junior',
+    'Blocks for TdRSTEAM shield v1, using SA5Firmata firmware.':
+        'Blocs per la TdRSTEAM v1, utilitzant el SA5Firmata.',
+    'Blocks for TdRSTEAM shield v2, using SA5Firmata firmware.':
+        'Blocs per la TdRSTEAM v2, utilitzant el SA5Firmata.'
+
 };
 
 // Add attributes to original SnapTranslator.dict.ca

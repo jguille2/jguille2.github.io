@@ -1,51 +1,94 @@
-BlockExportDialogMorph.prototype.exportBlocks = function () {
-    var str = this.serializer.serialize(this.blocks);
+//specialOptionMenus for Snap4Arduino
+CustomBlockDefinition.prototype.originalDropDownMenuOf = CustomBlockDefinition.prototype.dropDownMenuOf;
 
-    if (this.blocks.length > 0) {
-        var contents = '<blocks app="'
-            + this.serializer.app
-            + '" version="'
-            + this.serializer.version
-            + '">'
-            + str
-            + '</blocks>';
+CustomBlockDefinition.prototype.dropDownMenuOf = function (inputName) {
+    var fname;
+    if (this.declarations.has(inputName) &&
+            this.declarations.get(inputName)[2]) {
+        if ((this.declarations.get(inputName)[2].indexOf('§_') === 0)) {
+            fname = this.declarations.get(inputName)[2].slice(2);
+            if (fname == 'digitalPins') {
+                return function() { 
+                           // Get board associated to currentSprite
+                           var sprite = ide.currentSprite,
+                               board = sprite.arduino.board;
 
-		var inp = document.createElement('input');
-		if (this.filePicker) {
-			document.body.removeChild(this.filePicker);
-			this.filePicker = null;
-		}
-		inp.nwsaveas = homePath() + 'blocks.xml';
-		inp.type = 'file';
-		inp.style.color = "transparent";
-		inp.style.backgroundColor = "transparent";
-		inp.style.border = "none";
-		inp.style.outline = "none";
-		inp.style.position = "absolute";
-		inp.style.top = "0px";
-		inp.style.left = "0px";
-		inp.style.width = "0px";
-		inp.style.height = "0px";
-		inp.addEventListener(
-			"change",
-			function (e) {
-				document.body.removeChild(inp);
-				this.filePicker = null;
-				
-				var fs = require('fs');
-				fs.writeFileSync(e.target.files[0].path, contents);
-			},
-			false
-			);
-		document.body.appendChild(inp);
-		this.filePicker = inp;
-		inp.click();
-    } else {
-        new DialogBoxMorph().inform(
-            'Export blocks',
-            'no blocks were selected',
-            this.world()
-        );
+                           if (board) {
+                               return sprite.arduino.pinsSettableToMode(board.MODES.INPUT);
+                           } else {
+                               return [];
+                           }
+                       };
+            }
+            if (fname == 'analogPins') {
+                return function() { 
+                           // Get board associated to currentSprite
+                           var sprite = ide.currentSprite,
+                               board = sprite.arduino.board;
+                        
+                           if (board) { 
+                               return board.analogPins.map(
+                                   function (each){
+                                       return (each - board.analogPins[0]).toString();
+                                   });
+                           } else { 
+                               return [];
+                           } 
+                       };
+            }
+            if (fname == 'pwmPins') {
+                return function() { 
+                           // Get board associated to currentSprite
+                           var sprite = ide.currentSprite,
+                               board = sprite.arduino.board;
+
+                           if (board) {
+                               // Can't use map because we need to construct keys dynamically
+                               var pins = {};
+                               Object.keys(sprite.arduino.pinsSettableToMode(board.MODES.PWM)).forEach(function (each) { pins[each + '~'] = each });
+                               return pins;
+                           } else {
+                               return [];
+                           }
+                       };
+            }
+        }
+        return this.originalDropDownMenuOf(inputName);
     }
+    return null;
 };
 
+BlockLabelFragment.prototype.originalHasSpecialMenu = BlockLabelFragment.prototype.hasSpecialMenu;
+
+BlockLabelFragment.prototype.hasSpecialMenu = function () {
+    return this.originalHasSpecialMenu() || contains(
+        [
+            '§_digitalPins',
+            '§_analogPins',
+            '§_pwmPins'
+        ],
+        this.options
+    );
+};
+
+InputSlotDialogMorph.prototype.originalSpecialOptionsMenu = InputSlotDialogMorph.prototype.specialOptionsMenu;
+
+InputSlotDialogMorph.prototype.specialOptionsMenu = function () {
+    var menu = this.originalSpecialOptionsMenu();
+    var myself = this,
+        on = '\u26AB ',
+        off = '\u26AA ';
+
+    function addSpecialOptions(label, selector) {
+        menu.addItem(
+            (myself.fragment.options === selector ?
+                    on : off) + localize(label),
+            selector
+        );
+    }
+
+    addSpecialOptions('digitalPins', '§_digitalPins');
+    addSpecialOptions('analogPins', '§_analogPins');
+    addSpecialOptions('pwmPins', '§_pwmPins');
+    return menu;
+};
