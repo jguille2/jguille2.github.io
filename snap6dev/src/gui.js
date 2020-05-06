@@ -78,7 +78,7 @@ Animation, BoxMorph, BlockEditorMorph, BlockDialogMorph, Note*/
 
 // Global stuff ////////////////////////////////////////////////////////
 
-modules.gui = '2020-May-05';
+modules.gui = '2020-May-06';
 
 // Declarations
 
@@ -730,15 +730,18 @@ IDE_Morph.prototype.createControlBar = function () {
         () => this.isSmallStage // query
     );
 
+    button.hasNeutralBackground = true;
     button.corner = 12;
     button.color = colors[0];
     button.highlightColor = colors[1];
-    button.pressColor = colors[2];
+    button.pressColor = colors[0];
     button.labelMinExtent = new Point(36, 18);
     button.padding = 0;
     button.labelShadowOffset = new Point(-1, -1);
     button.labelShadowColor = colors[1];
-    button.labelColor = this.buttonLabelColor;
+    button.labelColor = MorphicPreferences.isFlat ?
+        new Color(255, 255, 255)
+        : this.buttonLabelColor;
     button.contrast = this.buttonContrast;
     // button.hint = 'stage size\nsmall & normal';
     button.fixLayout();
@@ -759,10 +762,11 @@ IDE_Morph.prototype.createControlBar = function () {
         () => this.isAppMode // query
     );
 
+    button.hasNeutralBackground = true;
     button.corner = 12;
     button.color = colors[0];
     button.highlightColor = colors[1];
-    button.pressColor = colors[2];
+    button.pressColor = colors[0];
     button.labelMinExtent = new Point(36, 18);
     button.padding = 0;
     button.labelShadowOffset = new Point(-1, -1);
@@ -792,7 +796,6 @@ IDE_Morph.prototype.createControlBar = function () {
     button.color = colors[0];
     button.highlightColor = colors[1];
     button.pressColor = new Color(153, 255, 213);
-//    button.pressColor = colors[2];
     button.labelMinExtent = new Point(36, 18);
     button.padding = 0;
     button.labelShadowOffset = new Point(-1, -1);
@@ -854,10 +857,11 @@ IDE_Morph.prototype.createControlBar = function () {
         () => this.isPaused() // query
     );
 
+    button.hasNeutralBackground = true;
     button.corner = 12;
     button.color = colors[0];
     button.highlightColor = colors[1];
-    button.pressColor = colors[2];
+    button.pressColor = colors[0];
     button.labelMinExtent = new Point(36, 18);
     button.padding = 0;
     button.labelShadowOffset = new Point(-1, -1);
@@ -965,15 +969,22 @@ IDE_Morph.prototype.createControlBar = function () {
     this.controlBar.settingsButton = settingsButton; // for menu positioning
 
     // cloudButton
-    button = new PushButtonMorph(
-        this,
+    button = new ToggleButtonMorph(
+        null, //colors,
+        this, // the IDE is the target
         'cloudMenu',
-        new SymbolMorph('cloud', 11)
+        [
+            new SymbolMorph('cloudOutline', 11),
+            new SymbolMorph('cloud', 11)
+        ],
+        () => !isNil(this.cloud.username) // query
     );
+
+    button.hasNeutralBackground = true;
     button.corner = 12;
     button.color = colors[0];
     button.highlightColor = colors[1];
-    button.pressColor = colors[2];
+    button.pressColor = colors[0];
     button.labelMinExtent = new Point(36, 18);
     button.padding = 0;
     button.labelShadowOffset = new Point(-1, -1);
@@ -982,9 +993,10 @@ IDE_Morph.prototype.createControlBar = function () {
     button.contrast = this.buttonContrast;
     // button.hint = 'cloud operations';
     button.fixLayout();
+    button.refresh();
     cloudButton = button;
     this.controlBar.add(cloudButton);
-    this.controlBar.cloudButton = cloudButton; // for menu positioning
+    this.controlBar.cloudButton = cloudButton; // for menu positioning & refresh
 
     this.controlBar.fixLayout = function () {
         x = this.right() - padding;
@@ -3841,7 +3853,7 @@ IDE_Morph.prototype.aboutSnap = function () {
         module, btn1, btn2, btn3, btn4, licenseBtn, translatorsBtn,
         world = this.world();
 
-    aboutTxt = 'Snap! 6.0.0 - dev -\nBuild Your Own Blocks\n\n'
+    aboutTxt = 'Snap! 6.0.0 - alpha -\nBuild Your Own Blocks\n\n'
         + 'Copyright \u24B8 2008-2020 Jens M\u00F6nig and '
         + 'Brian Harvey\n'
         + 'jens@moenig.org, bh@cs.berkeley.edu\n\n'
@@ -5582,6 +5594,7 @@ IDE_Morph.prototype.initializeCloud = function () {
             user.choice,
             (username, role, response) => {
                 sessionStorage.username = username;
+                this.controlBar.cloudButton.refresh();
                 this.source = 'cloud';
                 if (!isNil(response.days_left)) {
                     new DialogBoxMorph().inform(
@@ -5745,10 +5758,12 @@ IDE_Morph.prototype.logout = function () {
     this.cloud.logout(
         () => {
             delete(sessionStorage.username);
+            this.controlBar.cloudButton.refresh();
             this.showMessage('disconnected.', 2);
         },
         () => {
             delete(sessionStorage.username);
+            this.controlBar.cloudButton.refresh();
             this.showMessage('disconnected.', 2);
         }
     );
@@ -5998,7 +6013,13 @@ IDE_Morph.prototype.cloudIcon = function (height, color) {
 IDE_Morph.prototype.setCloudURL = function () {
     new DialogBoxMorph(
         null,
-        url => this.cloud.url = url
+        url => {
+            this.cloud.url = url;
+            this.cloud.checkCredentials(
+                () => this.controlBar.cloudButton.refresh(),
+                () => this.controlBar.cloudButton.refresh()
+            );
+        }
     ).withKey('cloudURL').prompt(
         'Cloud URL',
         this.cloud.url,
