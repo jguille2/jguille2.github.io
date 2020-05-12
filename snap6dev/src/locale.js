@@ -217,7 +217,7 @@ SnapTranslator.dict.pt = {
     'translator_e-mail':
         'mmsequeira@gmail.com',
     'last_changed':
-        '2019-06-25'
+        '2020-04-06'
 };
 
 SnapTranslator.dict.cs = {
@@ -371,7 +371,7 @@ SnapTranslator.dict.ca = {
     'translator_e-mail':
         'bernat@snap4arduino.rocks, jguille2@xtec.cat',
     'last_changed':
-        '2020-01-03'
+        '2020-01-30'
 };
 
 SnapTranslator.dict.ca_VA = {
@@ -614,4 +614,15 @@ SnapTranslator.dict.sk = {
         'peter_lukacovic@outlook.com',
     'last_changed':
         '2019-12-10'
+};
+
+SnapTranslator.dict.he = {
+    'language_name':
+        'עברית',
+    'language_translator':
+        'יוסי כהן',
+    'translator_e-mail':
+        'cohenyossi81@gmail.com',
+    'last_changed':
+        '2020-04-21'
 };
